@@ -1,0 +1,16 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Makes the wrapper take up full viewport height */
+}
+
+app-header, app-footer {
+  flex-grow: 1; /* Ensures it grows and pushes the footer down */
+  background-color: #3b2559;
+}
+
