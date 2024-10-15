@@ -1,5 +1,6 @@
 
 <div class="wrapper">
+  <app-notification ></app-notification>
   <app-loader *ngIf="isLoading"></app-loader>
   <form *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="onSubmit(form.valid)" class="example-container">
     <mat-form-field>

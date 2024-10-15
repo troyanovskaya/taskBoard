@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -9,12 +9,14 @@ import {merge} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { LoaderComponent } from '../reusable/loader/loader.component';
+import { ErrorsService } from '../../services/errors.service';
+import { NotificationComponent } from '../reusable/notification/notification.component';
 
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, LoaderComponent],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, LoaderComponent, NotificationComponent],
 
   // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './register-page.component.html',
@@ -32,7 +34,10 @@ export class RegisterPageComponent {
   errorPasswordMessage = signal('');
   errorPassword1Message = signal('');
   authService:AuthService = inject(AuthService);
+  errorsService: ErrorsService = inject(ErrorsService)
   isLoading: boolean = false;
+  notificationMessage:string = '';
+  @ViewChild(NotificationComponent) notification?: NotificationComponent;
   constructor() {
     merge(this.form.controls.email.statusChanges, this.form.controls.email.valueChanges)
       .pipe(takeUntilDestroyed())
@@ -78,12 +83,20 @@ export class RegisterPageComponent {
         next: (res) => {
         console.log(res);
         this.isLoading = false;
-        console.log(this.isLoading)
       }, 
         error: (err) => {
-          alert(err.error.error.message);
-          this.isLoading = false;
-          console.log(this.isLoading)
+          this.errorsService.errors.forEach( el =>{
+            if (err.error.error.message === el.error){
+              this.isLoading = false;
+              this.notificationMessage = el.message;
+              // alert(el.message);
+            }
+          }) 
+          if(this.notification){
+            this.notification.setValues(this.notificationMessage, 'error')
+            this.notification.show();      
+          }
+
         }})
       
     } else{
