@@ -8,14 +8,15 @@ import {MatButtonModule} from '@angular/material/button';
 import {merge} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { LoaderComponent } from '../reusable/loader/loader.component';
 
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, LoaderComponent],
 
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
 })
@@ -31,7 +32,7 @@ export class RegisterPageComponent {
   errorPasswordMessage = signal('');
   errorPassword1Message = signal('');
   authService:AuthService = inject(AuthService);
-
+  isLoading: boolean = false;
   constructor() {
     merge(this.form.controls.email.statusChanges, this.form.controls.email.valueChanges)
       .pipe(takeUntilDestroyed())
@@ -71,11 +72,20 @@ export class RegisterPageComponent {
   }
   onSubmit(valid:boolean){
     if(valid && this.form.value.email && this.form.value.password){
+      this.isLoading = true;
       this.authService.register(this.form.value.email, this.form.value.password)
-      .subscribe({next: (res) => {
+      .subscribe({
+        next: (res) => {
         console.log(res);
+        this.isLoading = false;
+        console.log(this.isLoading)
       }, 
-        error: (err) => alert(err.error.error.message)})
+        error: (err) => {
+          alert(err.error.error.message);
+          this.isLoading = false;
+          console.log(this.isLoading)
+        }})
+      
     } else{
       this.updateEmailErrorMessage();
       this.updatePasswordErrorMessage();

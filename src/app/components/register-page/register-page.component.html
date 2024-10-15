@@ -1,6 +1,7 @@
 
 <div class="wrapper">
-  <form [formGroup]="form" (ngSubmit)="onSubmit(form.valid)" class="example-container">
+  <app-loader *ngIf="isLoading"></app-loader>
+  <form *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="onSubmit(form.valid)" class="example-container">
     <mat-form-field>
       <mat-label>Enter your email</mat-label>
       <input
@@ -52,5 +53,4 @@
     </mat-form-field>
     <button type="submit" class="sbt-btn" [ngClass]="{'active': form.valid, 'disabled': form.invalid}">Submit</button>
   </form>
-
 </div>
