@@ -4,6 +4,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,

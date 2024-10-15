@@ -7,12 +7,13 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {merge} from 'rxjs';
 import { CommonModule } from '@angular/common';
+import {RouterModule} from '@angular/router'
 
 
 @Component({
   selector: 'app-log-in-page',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './log-in-page.component.html',
   styleUrl: './log-in-page.component.scss'
@@ -47,7 +48,7 @@ export class LogInPageComponent {
   updatePasswordErrorMessage(){
     if (this.form.controls.password.hasError('required')) {
       this.errorPasswordMessage.set('You must enter a value');
-    } else if (this.form.controls.password.hasError('minLength')) {
+    } else if (this.form.controls.password.hasError('minlength')) {
       this.errorPasswordMessage.set('Value should not be less then 8 characters long');
     } else {
       this.errorPasswordMessage.set('');

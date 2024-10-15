@@ -34,7 +34,7 @@
     </mat-form-field>
     <button type="submit" class="sbt-btn" [ngClass]="{'active': form.valid, 'disabled': form.invalid}">Submit</button>
     <div class="text">
-      <p>Don't have an account? <a routerLink="/register" href="/register">Create one!</a></p>
+      <p>Don't have an account? <a [routerLink]="'/register'">Create one!</a></p>
     </div>
   </form>
 

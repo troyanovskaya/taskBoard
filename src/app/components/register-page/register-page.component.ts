@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -7,11 +7,14 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {merge} from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule],
+
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
@@ -27,6 +30,7 @@ export class RegisterPageComponent {
   errorEmailMessage = signal('');
   errorPasswordMessage = signal('');
   errorPassword1Message = signal('');
+  authService:AuthService = inject(AuthService);
 
   constructor() {
     merge(this.form.controls.email.statusChanges, this.form.controls.email.valueChanges)
@@ -49,7 +53,7 @@ export class RegisterPageComponent {
   updatePasswordErrorMessage(){
     if (this.form.controls.password.hasError('required')) {
       this.errorPasswordMessage.set('You must enter a value');
-    } else if (this.form.controls.password.hasError('minLength')) {
+    } else if (this.form.controls.password.hasError('minlength')) {
       this.errorPasswordMessage.set('Value should not be less then 8 characters long');
     } else {
       this.errorPasswordMessage.set('');
@@ -66,8 +70,12 @@ export class RegisterPageComponent {
     event.stopPropagation();
   }
   onSubmit(valid:boolean){
-    if(valid){
-      console.log(this.form.value)
+    if(valid && this.form.value.email && this.form.value.password){
+      this.authService.register(this.form.value.email, this.form.value.password)
+      .subscribe({next: (res) => {
+        console.log(res);
+      }, 
+        error: (err) => alert(err.error.error.message)})
     } else{
       this.updateEmailErrorMessage();
       this.updatePasswordErrorMessage();
