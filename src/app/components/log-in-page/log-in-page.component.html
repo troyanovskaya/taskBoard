@@ -1,6 +1,8 @@
 
 <div class="wrapper">
-  <form [formGroup]="form" (ngSubmit)="onSubmit(form.valid)" class="example-container">
+  <app-notification ></app-notification>
+  <app-loader *ngIf="isLoading"></app-loader>
+  <form *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="onSubmit(form.valid)" class="example-container">
     <mat-form-field>
       <mat-label>Enter your email</mat-label>
       <input

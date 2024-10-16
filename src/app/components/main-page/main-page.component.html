@@ -1,0 +1,10 @@
+<div class="wrapper">
+    <div cdkDropListGroup class="board-container" >
+        <ng-container *ngFor="let list of lists">
+            <app-board  [id]="list.id" [title]="list.title" [tasks]="list.tasks" [connectedTo]="list.connectedTo">
+
+            </app-board>
+        </ng-container>
+    </div>
+    <button (click)="click()">Submit</button>
+</div>

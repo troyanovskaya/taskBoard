@@ -1,0 +1,11 @@
+.wrapper{
+    min-height: 80vh;
+}
+.board-container{
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}

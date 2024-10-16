@@ -1,0 +1,16 @@
+<div class="wrapper" [id]="id" >
+    <div class="title">
+        <div>{{title}}</div>
+    </div>
+    <div class="drag-area" >
+        <div
+        cdkDropList
+        [cdkDropListData]="tasks"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        @for (task of tasks; track task) {
+          <div class="example-box" cdkDrag>{{task}}</div>
+        }
+      </div>
+    </div>
+</div>

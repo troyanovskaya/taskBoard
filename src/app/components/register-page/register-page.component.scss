@@ -51,6 +51,16 @@ input.example-right-align::-webkit-inner-spin-button {
 .sbt-btn.disabled{
   opacity:0.6
 }
+.text{
+  margin:20px;
+}
+a{
+  color:grey;
+  cursor:pointer;
+}
+p{
+  margin:5px;
+}
 @media (width<=290px){
   .example-container  {
     padding:5px;

@@ -1,24 +1,28 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {merge} from 'rxjs';
+import {merge, Observable, Subscription} from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {RouterModule} from '@angular/router'
+import {Router, RouterModule} from '@angular/router'
+import { NotificationComponent } from "../reusable/notification/notification.component";
+import { LoaderComponent } from "../reusable/loader/loader.component";
+import { AuthService } from '../../services/auth.service';
+import { ErrorsService } from '../../services/errors.service';
+import { AuthResponse } from '../../models/AuthResponse';
 
 
 @Component({
   selector: 'app-log-in-page',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, RouterModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, RouterModule, NotificationComponent, LoaderComponent],
   templateUrl: './log-in-page.component.html',
   styleUrl: './log-in-page.component.scss'
 })
-export class LogInPageComponent {
+export class LogInPageComponent implements OnDestroy{
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)])
@@ -26,7 +30,14 @@ export class LogInPageComponent {
   hide = signal(true);
   errorEmailMessage = signal('');
   errorPasswordMessage = signal('');
-
+  authService:AuthService = inject(AuthService);
+  errorsService: ErrorsService = inject(ErrorsService)
+  isLoading: boolean = false;
+  notificationMessage:string = '';
+  @ViewChild(NotificationComponent) notification?: NotificationComponent;
+  // authObs?: Observable<AuthResponse>;
+  router: Router = inject(Router);
+  subscription?: Subscription;
   constructor() {
     merge(this.form.controls.email.statusChanges, this.form.controls.email.valueChanges)
       .pipe(takeUntilDestroyed())
@@ -34,6 +45,9 @@ export class LogInPageComponent {
     merge(this.form.controls.password.statusChanges, this.form.controls.password.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updatePasswordErrorMessage());
+  }
+  ngOnDestroy(){
+    this.subscription?.unsubscribe();
   }
 
   updateEmailErrorMessage() {
@@ -60,8 +74,34 @@ export class LogInPageComponent {
     event.stopPropagation();
   }
   onSubmit(valid:boolean){
-    if(valid){
-      console.log(this.form.value)
+    if(valid && this.form.value.email && this.form.value.password){
+      this.isLoading = true;
+      this.subscription = this.authService.login(this.form.value.email, this.form.value.password)
+      .subscribe({
+        next: (res) => {
+        console.log(res);
+        this.isLoading = false;
+        this.router.navigate(['/main']);
+      }, 
+        error: (err) => {
+          console.log(err);
+          this.notificationMessage = '';
+          this.errorsService.errors.forEach( el =>{
+            if (err.error.error.message === el.error){
+              this.isLoading = false;
+              this.notificationMessage = el.message;
+            }
+          }) 
+          if(this.notification){
+            if(this.notificationMessage){
+              this.notification.setValues(this.notificationMessage, 'error')
+            } else{
+              this.notification.setValues('An unknown error has occured', 'error')
+            }
+            this.notification.show(); 
+          }
+
+        }})
     } else{
       this.updateEmailErrorMessage();
       this.updatePasswordErrorMessage();

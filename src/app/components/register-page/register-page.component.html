@@ -53,5 +53,8 @@
       }
     </mat-form-field>
     <button type="submit" class="sbt-btn" [ngClass]="{'active': form.valid, 'disabled': form.invalid}">Submit</button>
+    <div class="text">
+      <p>Already have an account? <a [routerLink]="'/login'">Log in!</a></p>
+    </div>
   </form>
 </div>

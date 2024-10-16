@@ -1,28 +1,30 @@
-import {ChangeDetectionStrategy, Component, inject, signal, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {merge} from 'rxjs';
+import {merge, Subscription} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { LoaderComponent } from '../reusable/loader/loader.component';
 import { ErrorsService } from '../../services/errors.service';
 import { NotificationComponent } from '../reusable/notification/notification.component';
-
+import {Router, RouterModule} from '@angular/router'
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, LoaderComponent, NotificationComponent],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, 
+    ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, 
+    LoaderComponent, NotificationComponent, RouterModule],
 
   // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
 })
-export class RegisterPageComponent {
+export class RegisterPageComponent implements OnDestroy {
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -38,6 +40,8 @@ export class RegisterPageComponent {
   isLoading: boolean = false;
   notificationMessage:string = '';
   @ViewChild(NotificationComponent) notification?: NotificationComponent;
+  router: Router = inject(Router);
+  subscription?: Subscription;
   constructor() {
     merge(this.form.controls.email.statusChanges, this.form.controls.email.valueChanges)
       .pipe(takeUntilDestroyed())
@@ -45,6 +49,9 @@ export class RegisterPageComponent {
     merge(this.form.controls.password.statusChanges, this.form.controls.password.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updatePasswordErrorMessage());
+  }
+  ngOnDestroy(){
+    this.subscription?.unsubscribe();
   }
 
   updateEmailErrorMessage() {
@@ -78,13 +85,15 @@ export class RegisterPageComponent {
   onSubmit(valid:boolean){
     if(valid && this.form.value.email && this.form.value.password){
       this.isLoading = true;
-      this.authService.register(this.form.value.email, this.form.value.password)
+      this.subscription = this.authService.register(this.form.value.email, this.form.value.password)
       .subscribe({
         next: (res) => {
         console.log(res);
         this.isLoading = false;
+        this.router.navigate(['/main']);
       }, 
         error: (err) => {
+          this.notificationMessage = '';
           this.errorsService.errors.forEach( el =>{
             if (err.error.error.message === el.error){
               this.isLoading = false;
@@ -93,8 +102,12 @@ export class RegisterPageComponent {
             }
           }) 
           if(this.notification){
-            this.notification.setValues(this.notificationMessage, 'error')
-            this.notification.show();      
+            if(this.notificationMessage){
+              this.notification.setValues(this.notificationMessage, 'error')
+            } else{
+              this.notification.setValues('An unknown error has occured', 'error')
+            }
+            this.notification.show(); 
           }
 
         }})
