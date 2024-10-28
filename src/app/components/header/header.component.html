@@ -1,1 +1,4 @@
-<div class="wrapper"></div>
+<div class="wrapper">
+    <button class="sbt-btn active" (click)="changeVisibility(true)">+ New Team</button>
+</div>
+<app-create-team (visibility)="changeVisibility($event)" [visible]="createTeamVisible"></app-create-team>

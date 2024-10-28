@@ -1,0 +1,43 @@
+<div class="wrapper" *ngIf="visible">
+    <!-- <app-dialog [title]="dialogTitle" [message]="dialogMessage"></app-dialog> -->
+    <div class="window">
+        <div class="title">
+            <div> Create a new Team</div>
+            <div class="cross" (click)="closeWindow()">X</div>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="submitTeam()" class="forms">
+            <mat-form-field>
+                <mat-label>Team name</mat-label>
+                <input matInput formControlName="name" (blur)="updateNameErrorMessage()">
+                @if (form.controls.name.invalid) {
+                    <mat-error>{{errorNameMessage()}}</mat-error>
+                }
+            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Project description</mat-label>
+                <textarea matInput formControlName="description" (blur)="updateDescriptionErrorMessage()"></textarea>
+                @if (form.controls.description.invalid) {
+                    <mat-error>{{errorDescriptionMessage()}}</mat-error>
+                }
+              </mat-form-field>
+              <div class="add-m">
+                <mat-form-field>
+                    <mat-label>New member</mat-label>
+                    <input
+                        matInput
+                        placeholder="pat@example.com"
+                        [formControl]="member"
+                        required
+                    />
+                </mat-form-field>
+                <button (click)="addMember()" type="button" class="sbt-btn active add">+</button>
+                <div class="email-list">
+                    <div *ngFor="let email of memberEmails">{{email}}</div>
+                    <div *ngIf="memberEmails.length===0" class="note">No additional members</div>
+                </div>
+              </div>
+              <button class="sbt-btn active submit" type="submit">Create</button>
+        </form>
+    </div>
+    <div class="background" (click)="closeWindow()"></div>
+</div>

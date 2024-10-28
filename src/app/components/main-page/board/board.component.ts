@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import {
@@ -10,10 +10,11 @@ import {
   transferArrayItem,
 
 } from '@angular/cdk/drag-drop';
+import { TaskComponent } from './task/task.component';
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, DragDropModule, CdkDropListGroup, CdkDropList, CdkDrag],
+  imports: [CommonModule, DragDropModule, CdkDropListGroup, CdkDropList, CdkDrag, TaskComponent],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
@@ -22,6 +23,8 @@ export class BoardComponent {
   @Input() tasks: string[] = [];
   @Input () connectedTo: string[] = [];
   @Input() id?: string;
+  @Output() arrayChanged: EventEmitter<boolean> = new EventEmitter<boolean>;
+  disableDrag:boolean = false;
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -33,6 +36,9 @@ export class BoardComponent {
         event.currentIndex,
       );
     }
+    this.arrayChanged.emit(true);
   }
-
+  createTask(){
+    this.tasks.push('New task');
+  }
 }

@@ -1,0 +1,17 @@
+
+<div class="wrapper">
+    <div *ngIf="!onEditMode" class="normal">
+        <div  class="task">{{task}}</div>
+        <div class="icon-container">
+            <img class="img" (click)="edit()" src="edit.png" alt="edit">
+            <img class="img" (click)="delete()" src="bin.png" alt="edit">
+        </div>
+    </div>
+    <div  *ngIf="onEditMode" class="edited">
+        <textarea class="text-edit" name="" id="">{{task}}</textarea>
+        <button (click)="edit()" class="sbt-btn active">Save</button>
+    </div>
+
+
+    
+</div>

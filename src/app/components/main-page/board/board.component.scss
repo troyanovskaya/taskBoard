@@ -1,7 +1,7 @@
 .wrapper{
     width: 300px;
     min-height: 200px;
-    border: 1px solid black;
+    border: 1px solid lightgrey;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -66,4 +66,31 @@
   
   .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .sbt-btn{
+    background-color: #bf5ea5;
+    color:white;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    padding:5px;
+    border:0px;
+    width:100%;
+    border-radius: 10px;
+    display:block;
+    margin:auto;
+  
+  }
+  .sbt-btn.active{
+    opacity: 0.8;
+  
+  }
+  .sbt-btn.active:hover{
+    opacity: 1;
+    cursor:pointer;
+    transform: scale(1.1)
+  }
+
+  @media screen and (max-width: 325px){
+    .wrapper{
+        width: 200px;
+    }
   }

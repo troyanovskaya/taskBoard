@@ -2,4 +2,33 @@
   width:100%;
   min-height: 10vh;
   background-color: #3b2559;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.sbt-btn{
+  background-color: #bf5ea5;
+  color:white;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  padding:5px;
+  border:0px;
+  width:100px;
+  border-radius: 10px;
+  display:block;
+  margin:auto;
+
+}
+.sbt-btn.active{
+  opacity: 0.8;
+
+}
+.sbt-btn.active:hover{
+  opacity: 1;
+  cursor:pointer;
+  transform: scale(1.1)
+}
+
+.sbt-btn.disabled{
+  opacity:0.6
 }

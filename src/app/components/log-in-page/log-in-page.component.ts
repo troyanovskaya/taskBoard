@@ -13,12 +13,16 @@ import { LoaderComponent } from "../reusable/loader/loader.component";
 import { AuthService } from '../../services/auth.service';
 import { ErrorsService } from '../../services/errors.service';
 import { AuthResponse } from '../../models/AuthResponse';
-
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 
 @Component({
   selector: 'app-log-in-page',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, RouterModule, NotificationComponent, LoaderComponent],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, 
+    ReactiveFormsModule, MatButtonModule, MatIconModule, CommonModule, 
+    RouterModule, NotificationComponent, LoaderComponent, AngularFireModule,
+    AngularFireDatabaseModule],
   templateUrl: './log-in-page.component.html',
   styleUrl: './log-in-page.component.scss'
 })
