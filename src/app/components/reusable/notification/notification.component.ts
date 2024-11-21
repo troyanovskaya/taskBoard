@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NotificationComponent implements OnInit{
 message: string = '';
-  duration: number = 2000; // Duration in milliseconds
+  duration: number = 2500; // Duration in milliseconds
   visible: boolean = false;
   type:string = '';
   setValues(message:string, type:string, duration = 2000){

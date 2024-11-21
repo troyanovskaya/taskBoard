@@ -1,5 +1,6 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, inject } from '@angular/core';
 import { CreateTeamComponent } from '../reusable/create-team/create-team.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,11 @@ import { CreateTeamComponent } from '../reusable/create-team/create-team.compone
 })
 export class HeaderComponent {
   createTeamVisible:boolean = false;
+  authService: AuthService = inject(AuthService);
   changeVisibility(state: boolean){
     this.createTeamVisible = state;
+  }
+  logout(){
+    this.authService.logout();
   }
 }

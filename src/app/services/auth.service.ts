@@ -3,34 +3,52 @@ import { Injectable, inject } from '@angular/core';
 import { AuthResponse } from '../models/AuthResponse';
 import { Subject, tap } from 'rxjs';
 import { User } from '../models/User';
+import { DataService } from './data.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   http:HttpClient = inject(HttpClient);
-  user = new Subject<User>();
-  registerUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAM82XcacqdPNT5p4AGJ8rm7yQA5wnfIJA';
-  loginUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAM82XcacqdPNT5p4AGJ8rm7yQA5wnfIJA';
+  dataService:DataService = inject(DataService);
+  router: Router = inject(Router);
+  user?:User;
+  getUser(){
+    if(!this.user){
+      const user = localStorage.getItem('user');
+      if(user){
+        this.user = JSON.parse(user);
+      }
+    }
+  }
   handleUser(res:AuthResponse){
     const expiresTs = new Date().getTime() + +res.expiresIn*1000;
     const expires = new Date(expiresTs);
-    const user = new User(res.email, res.localId, res.idToken, expires);
-    this.user.next(user);
+    const user = new User(res.displayName, res.email, res.localId, res.idToken, res.refreshToken, expires);
+    this.user = user;
+    console.log(user);
+    localStorage.setItem('user', JSON.stringify(user));
+    this.user = user;
   }
   register(email:string, password:string){
-    const data = { email: email.trim(), password: password.trim(), returnSecureToken: true};
-    return this.http.post<AuthResponse>(this.registerUrl, data)
+    const data = { email: email.trim(), password: password.trim(), login: 'Ann', returnSecureToken: true};
+    return this.http.post<AuthResponse>(`${this.dataService.url}/user/register`, data)
             .pipe(tap( (res) =>{
               this.handleUser(res);
             }));
   }
   login(email:string, password:string){
     const data = { email: email.trim(), password: password.trim(), returnSecureToken: true};
-    return this.http.post<AuthResponse>(this.loginUrl, data)
+    return this.http.post<AuthResponse>(`${this.dataService.url}/user/login`, data)
           .pipe(tap( (res) =>{
             this.handleUser(res);
           }));
+  }
+  logout(){
+    localStorage.removeItem('user');
+    this.user = undefined;
+    this.router.navigate(['/login']);
   }
   constructor() { }
 }

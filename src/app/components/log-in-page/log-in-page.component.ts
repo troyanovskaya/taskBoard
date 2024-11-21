@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -26,7 +26,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
   templateUrl: './log-in-page.component.html',
   styleUrl: './log-in-page.component.scss'
 })
-export class LogInPageComponent implements OnDestroy{
+export class LogInPageComponent implements OnDestroy, OnInit{
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)])
@@ -50,9 +50,16 @@ export class LogInPageComponent implements OnDestroy{
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updatePasswordErrorMessage());
   }
+  ngOnInit(){
+    this.authService.getUser();
+    if(this.authService.user){
+      this.router.navigate(['/main']);
+    }
+  }
   ngOnDestroy(){
     this.subscription?.unsubscribe();
   }
+
 
   updateEmailErrorMessage() {
     if (this.form.controls.email.hasError('required')) {
@@ -77,6 +84,20 @@ export class LogInPageComponent implements OnDestroy{
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
+  showNotification(message:string, type:string){
+    console.log('message: ', message)
+    if(!message){
+      return false;
+    } else{
+      this.notificationMessage = message;
+      this.isLoading = false;
+      if(this.notification){
+        this.notification.setValues(this.notificationMessage, type);
+        this.notification.show(); 
+      }
+      return true;
+    }    
+  }
   onSubmit(valid:boolean){
     if(valid && this.form.value.email && this.form.value.password){
       this.isLoading = true;
@@ -88,23 +109,10 @@ export class LogInPageComponent implements OnDestroy{
         this.router.navigate(['/main']);
       }, 
         error: (err) => {
-          console.log(err);
           this.notificationMessage = '';
-          this.errorsService.errors.forEach( el =>{
-            if (err.error.error.message === el.error){
-              this.isLoading = false;
-              this.notificationMessage = el.message;
-            }
-          }) 
-          if(this.notification){
-            if(this.notificationMessage){
-              this.notification.setValues(this.notificationMessage, 'error')
-            } else{
-              this.notification.setValues('An unknown error has occured', 'error')
-            }
-            this.notification.show(); 
-          }
-
+          this.isLoading = false;
+          console.log('!!!')
+          this.showNotification(err.error.error, 'error');
         }})
     } else{
       this.updateEmailErrorMessage();

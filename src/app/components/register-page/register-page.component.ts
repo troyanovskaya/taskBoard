@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -12,6 +12,7 @@ import { LoaderComponent } from '../reusable/loader/loader.component';
 import { ErrorsService } from '../../services/errors.service';
 import { NotificationComponent } from '../reusable/notification/notification.component';
 import {Router, RouterModule} from '@angular/router'
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register-page',
@@ -24,7 +25,7 @@ import {Router, RouterModule} from '@angular/router'
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
 })
-export class RegisterPageComponent implements OnDestroy {
+export class RegisterPageComponent implements OnDestroy, OnInit {
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -53,6 +54,12 @@ export class RegisterPageComponent implements OnDestroy {
   ngOnDestroy(){
     this.subscription?.unsubscribe();
   }
+  ngOnInit(){
+    this.authService.getUser();
+    if(this.authService.user){
+      this.router.navigate(['/main']);
+    }
+  }
 
   updateEmailErrorMessage() {
     if (this.form.controls.email.hasError('required')) {
@@ -77,10 +84,23 @@ export class RegisterPageComponent implements OnDestroy {
     if(!index){
       this.hide.set(!this.hide());
     } else{
-      this.hide1.set(!this.hide());
+      this.hide1.set(!this.hide1());
     }
 
     event.stopPropagation();
+  }
+  showNotification(message:string, type:string){
+    if(!message){
+      return false;
+    } else{
+      this.notificationMessage = message;
+      this.isLoading = false;
+      if(this.notification){
+        this.notification.setValues(this.notificationMessage, type);
+        this.notification.show(); 
+      }
+      return true;
+    }    
   }
   onSubmit(valid:boolean){
     if(valid && this.form.value.email && this.form.value.password){
@@ -88,28 +108,13 @@ export class RegisterPageComponent implements OnDestroy {
       this.subscription = this.authService.register(this.form.value.email, this.form.value.password)
       .subscribe({
         next: (res) => {
-        console.log(res);
         this.isLoading = false;
         this.router.navigate(['/main']);
       }, 
         error: (err) => {
           this.notificationMessage = '';
-          this.errorsService.errors.forEach( el =>{
-            if (err.error.error.message === el.error){
-              this.isLoading = false;
-              this.notificationMessage = el.message;
-              // alert(el.message);
-            }
-          }) 
-          if(this.notification){
-            if(this.notificationMessage){
-              this.notification.setValues(this.notificationMessage, 'error')
-            } else{
-              this.notification.setValues('An unknown error has occured', 'error')
-            }
-            this.notification.show(); 
-          }
-
+          this.isLoading = false;
+          this.showNotification(err.error.error, 'error');
         }})
       
     } else{

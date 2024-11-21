@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "taskBoard:build:production"
+              "buildTarget": "taskboard:build:production"
             },
             "development": {
-              "buildTarget": "taskBoard:build:development"
+              "buildTarget": "taskboard:build:development"
             }
           },
           "defaultConfiguration": "development"
