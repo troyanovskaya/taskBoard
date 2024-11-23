@@ -13,7 +13,7 @@ export class AuthService {
   http:HttpClient = inject(HttpClient);
   dataService:DataService = inject(DataService);
   router: Router = inject(Router);
-  user?:User;
+  user?:User | null;
   getUser(){
     if(!this.user){
       const user = localStorage.getItem('user');
@@ -47,7 +47,7 @@ export class AuthService {
   }
   logout(){
     localStorage.removeItem('user');
-    this.user = undefined;
+    this.user = null;
     this.router.navigate(['/login']);
   }
   constructor() { }
