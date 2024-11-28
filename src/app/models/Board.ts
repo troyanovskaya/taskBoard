@@ -1,7 +1,9 @@
-import { Task } from "./Task";
+import { List, Task } from "./Task";
 
 export interface Board{
-    todo: Task[], 
-    process:Task[], 
-    done: Task[]
+    title: string, 
+    ref: List, 
+    id: string, 
+    tasks: Task[], 
+    connectedTo: string[]
 }

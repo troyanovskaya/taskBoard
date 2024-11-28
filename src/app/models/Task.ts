@@ -1,16 +1,15 @@
 import { Comm } from "./Comm";
 
-export enum List{
-    'to do',
-    'in process',
-    'done'
-}
-export interface Task{
-    userId:string,
-    list: List,
-    teamId:string,
-    taskMessage:string,
-    creationTime:string,
-    edited:boolean,
-    comms: Comm[]
+export type List = 'do'| 'progress' |'done';
+export class Task{
+    constructor(
+    public creatorId: string,
+    public userId: string,
+    public task: string,
+    public status: List |undefined,
+    public id?:string){}
+    changeMessage(message:string){
+        this.task = message;
+
+    }
 }

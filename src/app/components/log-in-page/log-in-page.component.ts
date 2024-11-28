@@ -104,14 +104,12 @@ export class LogInPageComponent implements OnDestroy, OnInit{
       this.subscription = this.authService.login(this.form.value.email, this.form.value.password)
       .subscribe({
         next: (res) => {
-        console.log(res);
         this.isLoading = false;
         this.router.navigate(['/main']);
       }, 
         error: (err) => {
           this.notificationMessage = '';
           this.isLoading = false;
-          console.log('!!!')
           this.showNotification(err.error.error, 'error');
         }})
     } else{

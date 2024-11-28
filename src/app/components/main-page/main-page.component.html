@@ -2,8 +2,8 @@
 
 <div class="wrapper">
     <div cdkDropListGroup class="board-container" >
-        <ng-container *ngFor="let list of lists">
-            <app-board (arrayChanged)="arrayChanged()"  [id]="list.id" [title]="list.title" [tasks]="list.tasks" [connectedTo]="list.connectedTo">
+        <ng-container *ngFor="let board of boards">
+            <app-board (arrayChanged)="arrayChanged()"  [id]="board.id" [title]="board.title" [tasks]="board.tasks" [connectedTo]="board.connectedTo" [type]="board.ref">
             </app-board>
         </ng-container>
     </div>

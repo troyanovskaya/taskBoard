@@ -16,7 +16,7 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-create-team',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule, MatFormFieldModule, MatInputModule, FormsModule, 
-    ReactiveFormsModule, CommonModule, DialogComponent, LoaderComponent, NotificationComponent],
+    ReactiveFormsModule, CommonModule, LoaderComponent, NotificationComponent],
   templateUrl: './create-team.component.html',
   styleUrl: './create-team.component.scss'
 })
@@ -49,29 +49,29 @@ export class CreateTeamComponent{
     this.memberEmails = [];
   }
   addTeam(){
-    if(this.form.value.description && this.form.value.name){
-      console.log(this.authService.user)
-      const team:Team = {adminId: this.authService.user?.localId || '1', members: [{userId: this.authService.user?.localId || '1', board: {todo: [], process: [], done:[]}}], 
-        description: this.form.value.description?.split('\n'), 
-        name: this.form.value.name};
-      this.isLoading = true;
-      let subscription = this.teamService.addTeam(team).subscribe({
-        next: (res) =>{
-          console.log(res);
-          this.isLoading = false;
-          this.resetAllForms();
-          this.closeWindow();
-        },
-        error: (err) =>{
-          console.log(err);
-          if(this.notification){
-            this.notification.setValues('An unknown error has occured', 'error')
-            this.notification.show(); 
-          }
-          this.isLoading = false;
-        }
-      })
-    }
+    // if(this.form.value.description && this.form.value.name){
+    //   console.log(this.authService.user)
+    //   // const team:Team = {adminId: this.authService.user?.localId || '1', members: [{userId: this.authService.user?.localId || '1', board: {todo: [], process: [], done:[]}}], 
+    //   //   description: this.form.value.description?.split('\n'), 
+    //   //   name: this.form.value.name};
+    //   this.isLoading = true;
+    //   let subscription = this.teamService.addTeam(team).subscribe({
+    //     next: (res) =>{
+    //       console.log(res);
+    //       this.isLoading = false;
+    //       this.resetAllForms();
+    //       this.closeWindow();
+    //     },
+    //     error: (err) =>{
+    //       console.log(err);
+    //       if(this.notification){
+    //         this.notification.setValues('An unknown error has occured', 'error')
+    //         this.notification.show(); 
+    //       }
+    //       this.isLoading = false;
+    //     }
+    //   })
+    // }
 
   }
   submitTeam(){
