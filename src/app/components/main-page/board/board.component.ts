@@ -28,6 +28,7 @@ export class BoardComponent {
   @Output() arrayChanged: EventEmitter<boolean> = new EventEmitter<boolean>;
   disableDrag:boolean = false;
   drop(event: CdkDragDrop<Task[]>) {
+
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -41,6 +42,6 @@ export class BoardComponent {
     this.arrayChanged.emit(true);
   }
   createTask(){
-    this.tasks.push(new Task('1', '1', '', this.type))
+    this.tasks.push(new Task(this.type))
   }
 }

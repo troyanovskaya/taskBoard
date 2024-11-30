@@ -4,6 +4,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Task } from '../../../../models/Task';
 import { FormsModule, NgModel } from '@angular/forms';
 import { TaskService } from '../../../../services/task.service';
+import { AuthService } from '../../../../services/auth.service';
 @Component({
   selector: 'app-task',
   standalone: true,
@@ -25,6 +26,7 @@ export class TaskComponent implements OnInit{
   @Output() dragDisabled: EventEmitter<boolean> = new EventEmitter<boolean>;
   onEditMode:boolean = false;
   taskService: TaskService = inject(TaskService);
+  authService:AuthService = inject(AuthService);
   
   edit(){
     this.onEditMode = !this.onEditMode;
@@ -32,9 +34,9 @@ export class TaskComponent implements OnInit{
 
       // this.dragDisabled.emit(true);
 
-    } else if(this.task){
+    } else if(this.task && this.authService.user?.localId){
 
-      this.task?.changeMessage(this.message);
+      this.task?.setValues(this.authService.user?.localId, this.authService.user?.localId, this.message);
       console.log(this.message);
       this.taskService.createTask(this.task);
       // this.dragDisabled.emit(false);
