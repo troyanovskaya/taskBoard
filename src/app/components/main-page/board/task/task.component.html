@@ -10,8 +10,5 @@
     <div  *ngIf="onEditMode" class="edited">
         <textarea class="text-edit" name="message" id="message" [(ngModel)] = 'message'>{{task?.task}}</textarea>
         <button (click)="edit()" class="sbt-btn active">Save</button>
-    </div>
-
-
-    
+    </div>    
 </div>

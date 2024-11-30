@@ -6,7 +6,7 @@ export class Task{
     public userId?: string;
     public task?: string;
     public status?: List | undefined;
-    public id?:string
+    public id:string | null = null;
     constructor(status:List | undefined){
         this.status = status;
     }
@@ -14,6 +14,9 @@ export class Task{
         this.creatorId = creatorId;
         this.userId = userId;
         this.task = task;
+    }
+    setId(id:string | null){
+        this.id = id;
     }
 
 

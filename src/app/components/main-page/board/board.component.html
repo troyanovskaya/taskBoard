@@ -10,9 +10,11 @@
         (cdkDropListDropped)="drop($event)">
         @for (task of tasks; track task) {
           <!-- <div class="example-box" cdkDrag>{{task}}</div> -->
-           <app-task (dragDisabled)="disableDrag = !disableDrag" class="example-box" cdkDrag [cdkDragDisabled]="disableDrag" [task]="task"></app-task>
+           <app-task (dragDisabled)="dragDisabled($event)" 
+           class="example-box" cdkDrag [cdkDragDisabled]="disableDrag" 
+           [task]="task" (taskDeleted)="onTaskDeleted($event)"></app-task>
         }
       </div>
     </div>
-    <button (click)="createTask()" class="sbt-btn active">+</button>
+    <button [disabled] = "disableDrag" (click)="createTask()" class="sbt-btn active">+</button>
 </div>

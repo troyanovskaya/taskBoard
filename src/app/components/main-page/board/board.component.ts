@@ -44,4 +44,16 @@ export class BoardComponent {
   createTask(){
     this.tasks.push(new Task(this.type))
   }
+  onTaskDeleted(id:string){
+    this.tasks = this.tasks.filter(el =>{
+     return  el.id != id;
+    })
+
+  }
+  dragDisabled(flag: boolean){
+    setTimeout(() => {
+      this.disableDrag = flag;
+    });
+
+  }
 }

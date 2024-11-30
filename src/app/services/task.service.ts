@@ -11,13 +11,7 @@ export class TaskService {
   dataService:DataService = inject(DataService);
   http:HttpClient = inject(HttpClient);
   createTask(task:Task){
-    if(!task.id){
-      this.http.post<string>(`${this.dataService.url}/tasks`, task).subscribe( data =>{
-        console.log(data);
-      })
-      // console.log(task);
-
-    }
+      return this.http.post<{id: string}>(`${this.dataService.url}/tasks`, task)
     
   }
   getUserTasks(id:string){
@@ -28,6 +22,8 @@ export class TaskService {
       console.log(data);
   });
   }
-
+  deleteTask(id:string){
+    return this.http.delete<string>(`${this.dataService.url}/tasks/${id}`)
+  }
   constructor() { }
 }
