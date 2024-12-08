@@ -36,11 +36,18 @@
                     />
                 </mat-form-field>
                 <button (click)="addMember()" type="button" class="sbt-btn active add">+</button>
-                <div class="email-list">
-                    <div *ngFor="let email of memberEmails">{{email}}</div>
-                    <div *ngIf="memberEmails.length===0" class="note">No additional members</div>
-                </div>
+                
               </div>
+              <div class="email-list">
+                <div class="member" *ngFor="let member of memberEmails; let i = index">
+                    <div class="member-item">{{member}}</div>
+                    <div class="member-img">
+                        <img class="img" *ngIf="i!==0" (click)="delete(i)" src="bin.png" alt="delete">
+                    </div>
+
+                </div>
+                <div *ngIf="memberEmails.size===0" class="note">No additional members</div>
+            </div>
               <button class="sbt-btn active submit" type="submit">Create</button>
         </form>
     </div>

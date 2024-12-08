@@ -124,6 +124,20 @@
         }
     }
   }
+  .member{
+    display: flex;
+    padding:10px;
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    gap:10px;
+    flex-wrap:wrap;
+    width: 200px;
+  }
+  .member-img img{
+    width:20px;
+    height:20px;
+    float: right;
+  }
   @media (width<=320px){
     .window{
         width:250px;

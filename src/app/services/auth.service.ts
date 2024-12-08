@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { AuthResponse } from '../models/AuthResponse';
-import { Subject, tap } from 'rxjs';
+import { map, Subject, tap } from 'rxjs';
 import { User } from '../models/User';
 import { DataService } from './data.service';
 import { Router } from '@angular/router';
@@ -33,10 +33,9 @@ export class AuthService {
   }
   register(email:string, password:string){
     const data = { email: email.trim(), password: password.trim(), login: 'Ann', returnSecureToken: true};
-    return this.http.post<AuthResponse>(`${this.dataService.url}/user/register`, data)
-            .pipe(tap( (res) =>{
-              this.handleUser(res);
-            }));
+    return this.http.post<AuthResponse>(`${this.dataService.url}/user/register`, data).pipe(
+      map(() => ({ success: true })) // Emit a value explicitly
+    );
   }
   login(email:string, password:string){
     const data = { email: email.trim(), password: password.trim(), returnSecureToken: true};
@@ -44,6 +43,9 @@ export class AuthService {
           .pipe(tap( (res) =>{
             this.handleUser(res);
           }));
+  }
+  email(email:string){
+    return this.http.post<{exist:string, email:string | null, id:string | null}>(`${this.dataService.url}/user/email`, {email})
   }
   logout(){
     localStorage.removeItem('user');

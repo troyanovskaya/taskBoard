@@ -1,0 +1,79 @@
+.wrapper{
+    height: 60vh;
+    width: 20px;
+    float:left;
+    position:fixed;
+    background-color: white;
+    border: 1px solid lightgrey;
+    top: 50%; 
+    transform: translateY(-50%);
+    transition: width 0.5s ease;
+    z-index:1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.wrapper.open {
+    width: 200px;
+}
+.btn{
+    background-color: #3b2559;
+    border: 0px;
+    color:white;
+    position:absolute;
+    top:0px;
+    right:0px;
+    padding:5px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    cursor:pointer;
+    transition: all 0.5s ease;
+}
+.btn:hover{
+    transform: scale(1.1)
+}
+.title{
+    background-color: #3b2559;   
+    color: white;
+    text-align: center;
+    padding: 7px;
+    border-radius: 10px;
+    min-height: 20px;
+}
+.team{
+    padding: 5px;
+}
+.team-name{
+    font-size: 1.2em;
+}
+.team-name:hover{
+    cursor:pointer;
+}
+.team-desc{
+    font-style: italic;
+    color: grey;
+}
+.bold{
+    font-weight: bold;
+}
+.sbt-btn{
+    background-color: #bf5ea5;
+    color:white;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    padding:5px;
+    border:0px;
+    width:100px;
+    border-radius: 10px;
+    display:block;
+    margin:auto;
+  
+  }
+  .sbt-btn.active{
+    opacity: 0.8;
+  
+  }
+  .sbt-btn.active:hover{
+    opacity: 1;
+    cursor:pointer;
+    transform: scale(1.1)
+  }
+  

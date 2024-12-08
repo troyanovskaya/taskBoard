@@ -9,10 +9,11 @@ import { AuthService } from '../../services/auth.service';
 import { Board } from '../../models/Board';
 import { Task } from '../../models/Task';
 import { TaskService } from '../../services/task.service';
+import {SideBarComponent} from './side-bar/side-bar.component'
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [BoardComponent, CommonModule, DragDropModule],
+  imports: [BoardComponent, CommonModule, DragDropModule, SideBarComponent],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })
@@ -23,46 +24,53 @@ export class MainPageComponent implements OnInit {
   boards: Board[] = [];
   ngOnInit() {
     this.authService.getUser();
+    this.taskService.tasks.subscribe( data =>{
+      this.setBoards(data)
+    })
     if(this.authService.user){
-      this.taskService.getUserTasks(this.authService.user.localId).subscribe(data =>{
-        const Do:Task[] = [];
-        const Progress:Task[] = [];
-        const Done:Task[] = [];
-        data.forEach(el =>{
-          switch (el.status){
-            case 'do':
-              Do.push(el);
-              break;
-            case 'progress':
-              Progress.push(el);
-              break;
-            case 'done':
-              Done.push(el);
-              break;
-          }
-        })
-        this.boards.push(
-          {title: 'To do', ref:'do', id: 'list-1', tasks: Do, connectedTo: ['list-2, list-3']},
-          {title: 'In process', ref:'progress', id: 'list-2', tasks: Progress, connectedTo: ['list-1, list-3']},
-          {title: 'Done', ref:'done', id: 'list-3', tasks: Done, connectedTo: ['list-2, list-1']})
-      })
+      this.taskService.getUserTasks(this.authService.user.localId);
     }
-
-    // this.teamService.getTeams(this.authService.user?.localId || '').subscribe( els =>{
-    //   console.log(els);
-    // })
+  }
+  setBoards(data: Task[]){
+    let Do:Task[] = [];
+    let Progress:Task[] = [];
+    let Done:Task[] = [];
+    data.forEach(el =>{
+      switch (el.status){
+        case 'do':
+          Do.push(el);
+          break;
+        case 'progress':
+          Progress.push(el);
+          break;
+        case 'done':
+          Done.push(el);
+          break;
+      }
+    })
+    Do = Do.sort( (a, b) =>{
+      return a.num - b.num;
+    })
+    Progress = Progress.sort( (a, b) =>{
+      return a.num - b.num;
+    })
+    Done = Done.sort( (a, b) =>{
+      return a.num - b.num;
+    })
+    this.boards.push(
+      {title: 'To do', ref:'do', id: 'list-1', tasks: Do, connectedTo: ['list-2, list-3']},
+      {title: 'In process', ref:'progress', id: 'list-2', tasks: Progress, connectedTo: ['list-1, list-3']},
+      {title: 'Done', ref:'done', id: 'list-3', tasks: Done, connectedTo: ['list-2, list-1']})
+  
   }
 
-
-
-click(){
-  console.log(this.boards)
-}
 arrayChanged(){
   this.boards.forEach( board =>{
-    board.tasks.forEach( task =>{
+    board.tasks.forEach( (task, indx) =>{
       if ((task.status !== board.ref) && task.id){
-        this.taskService.updateTask(task.id, {"status": board.ref})
+        this.taskService.updateTask(task.id, {"status": board.ref, "num": indx}).subscribe();
+      } else if( (task.num !== indx)  && task.id){
+        this.taskService.updateTask(task.id, {"num": indx}).subscribe();
       }
     })
   })

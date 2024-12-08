@@ -105,14 +105,18 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   onSubmit(valid:boolean){
     if(valid && this.form.value.email && this.form.value.password){
       this.isLoading = true;
+      console.log('router1')
       this.subscription = this.authService.register(this.form.value.email, this.form.value.password)
       .subscribe({
         next: (res) => {
+        console.log('router2')
         this.isLoading = false;
-        this.router.navigate(['/main']);
+
+        this.router.navigate(['/login']);
       }, 
         error: (err) => {
           this.notificationMessage = '';
+          console.log(err)
           this.isLoading = false;
           this.showNotification(err.error.error, 'error');
         }})

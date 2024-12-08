@@ -1,11 +1,11 @@
-
-
 <div class="wrapper">
+    <app-side-bar></app-side-bar>
     <div cdkDropListGroup class="board-container" >
         <ng-container *ngFor="let board of boards">
-            <app-board (arrayChanged)="arrayChanged()"  [id]="board.id" [title]="board.title" [tasks]="board.tasks" [connectedTo]="board.connectedTo" [type]="board.ref">
+            <app-board (arrayChanged)="arrayChanged()"  [id]="board.id" 
+            [title]="board.title" [tasks]="board.tasks" [connectedTo]="board.connectedTo" [type]="board.ref">
             </app-board>
         </ng-container>
     </div>
-    <button (click)="click()">Submit</button>
+
 </div>

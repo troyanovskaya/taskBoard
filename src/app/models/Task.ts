@@ -1,5 +1,3 @@
-import { Comm } from "./Comm";
-
 export type List = 'do'| 'progress' |'done';
 export class Task{
     public creatorId?: string;
@@ -7,10 +5,14 @@ export class Task{
     public task?: string;
     public status?: List | undefined;
     public id:string | null = null;
-    constructor(status:List | undefined){
+    public num: number;
+    public teamId:string;
+    constructor(status:List | undefined, num:number, teamId:string){
         this.status = status;
+        this.num = num;
+        this.teamId = teamId;
     }
-    setValues(creatorId: string, userId:string, task:string){
+    setValues(creatorId: string, userId:string, task:string, ){
         this.creatorId = creatorId;
         this.userId = userId;
         this.task = task;
@@ -18,6 +20,4 @@ export class Task{
     setId(id:string | null){
         this.id = id;
     }
-
-
 }

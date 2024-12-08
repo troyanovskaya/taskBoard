@@ -20,7 +20,14 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './create-team.component.html',
   styleUrl: './create-team.component.scss'
 })
-export class CreateTeamComponent{
+export class CreateTeamComponent implements OnInit{
+  ngOnInit(): void {
+    if(this.authService.user){
+      this.memberEmails.add(this.authService.user.email);
+      this.memberIds.add(this.authService.user.localId);
+    }
+
+  }
   @Input() visible: boolean = false;
   @Output() visibility: EventEmitter<boolean> = new EventEmitter<boolean>;
   @ViewChild(NotificationComponent) notification?: NotificationComponent;
@@ -34,7 +41,8 @@ export class CreateTeamComponent{
   dialogMessage:string = "Are you sure you don't want to add any members tot he team?";
   dialogTitle:string = 'Team members';
   teamService: TeamService = inject(TeamService);
-  memberEmails: string[] = [];
+  memberEmails: Set<string> = new Set<string>;
+  memberIds: Set<string> = new Set<string>;
   form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.minLength(10)])
@@ -46,7 +54,7 @@ export class CreateTeamComponent{
     this.form.controls.name.setErrors(null);
     this.form.controls.description.setErrors(null);
     this.member.setErrors(null);
-    this.memberEmails = [];
+    this.memberEmails.clear();
   }
   addTeam(){
     // if(this.form.value.description && this.form.value.name){
@@ -76,7 +84,7 @@ export class CreateTeamComponent{
   }
   submitTeam(){
     if(this.form.valid){
-      if(this.memberEmails.length===0){
+      if(this.memberEmails.size===1){
         this.openDialog('500ms', '500ms');
       } else{
         this.addTeam();
@@ -88,13 +96,27 @@ export class CreateTeamComponent{
   }
   addMember(){
     if(this.member.errors === null && this.member.value!==null){
-      this.memberEmails.push(this.member.value);
-      // this.authService.checkIfEmailExist(this.member.value);
+      //this.memberEmails.push(this.member.value);
+      this.authService.email(this.member.value).subscribe( data =>{
+        if(data.exist && data.email && data.id){
+          if(this.memberEmails.has(data.email)){
+            this.openNotification('This user is already on the list', 'note');
+          } else{
+            this.memberEmails.add(data.email);
+            this.memberIds.add(data.id);
+            this.member.reset();
+            this.member.setErrors(null);
+          }
+
+        } else{
+          this.openNotification('Sorry, this user is not registered yet.', 'error');
+        }
+        console.log(data)
+      });
       console.log(this.memberEmails);
-      this.member.reset();
-      this.member.setErrors(null);
+
     } else{
-      console.log(this.member)  
+      this.openNotification('Please, enter the valid email address.', 'error'); 
     }
 
   }
@@ -119,7 +141,12 @@ export class CreateTeamComponent{
     }
   }
   readonly dialog = inject(MatDialog);
-
+  openNotification(message: string, type: string){
+    if(this.notification){
+      this.notification.setValues(message, type)
+      this.notification.show(); 
+    }
+  }
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     let dialogRef = this.dialog.open(DialogComponent, {
       width: '250px',
@@ -136,5 +163,9 @@ export class CreateTeamComponent{
         this.updateNameErrorMessage();
       }
     })
+  }
+  delete(i:number){
+
+
   }
 }

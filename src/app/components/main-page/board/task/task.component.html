@@ -1,14 +1,15 @@
-
+<app-notification ></app-notification>
 <div class="wrapper">
     <div *ngIf="!onEditMode" class="normal">
         <div  class="task">{{task?.task}}</div>
         <div class="icon-container">
             <img class="img" (click)="edit()" src="edit.png" alt="edit">
-            <img class="img" (click)="delete()" src="bin.png" alt="edit">
+            <img class="img" (click)="delete()" src="bin.png" alt="delete">
         </div>
     </div>
     <div  *ngIf="onEditMode" class="edited">
-        <textarea class="text-edit" name="message" id="message" [(ngModel)] = 'message'>{{task?.task}}</textarea>
+        <textarea class="text-edit" name="message" id="message" 
+        [(ngModel)] = 'message' [ngClass]="{ 'error-border': hasError }">{{task?.task}}</textarea>
         <button (click)="edit()" class="sbt-btn active">Save</button>
     </div>    
 </div>
