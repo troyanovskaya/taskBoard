@@ -4,11 +4,12 @@ import { TeamService } from '../../../services/team.service';
 import { AuthService } from '../../../services/auth.service';
 import { Team } from '../../../models/Team';
 import { CreateTeamComponent } from '../../reusable/create-team/create-team.component';
+import { TeamComponent } from './team/team.component';
 
 @Component({
   selector: 'app-side-bar',
   standalone: true,
-  imports: [CommonModule, CreateTeamComponent],
+  imports: [CommonModule, CreateTeamComponent, TeamComponent],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss'
 })

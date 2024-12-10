@@ -21,10 +21,25 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './create-team.component.scss'
 })
 export class CreateTeamComponent implements OnInit{
+  members: {email: string, id: string}[] = [];
   ngOnInit(): void {
+    this.teamService.teams.subscribe( el =>{
+      this.isLoading = false;
+      this.resetAllForms();
+      this.closeWindow();
+    })
+    this.teamService.errorAdding.subscribe( el =>{
+      if (el && this.notification){
+        this.isLoading = false;
+        this.notification.setValues('An unknown error has occured', 'error')
+        this.notification.show();
+      }
+    })
     if(this.authService.user){
-      this.memberEmails.add(this.authService.user.email);
-      this.memberIds.add(this.authService.user.localId);
+      this.members.push({email: this.authService.user.email, id: this.authService.user.localId});
+      console.log(this.members)
+    } else{
+      console.log('!!!!!!!!')
     }
 
   }
@@ -41,8 +56,7 @@ export class CreateTeamComponent implements OnInit{
   dialogMessage:string = "Are you sure you don't want to add any members tot he team?";
   dialogTitle:string = 'Team members';
   teamService: TeamService = inject(TeamService);
-  memberEmails: Set<string> = new Set<string>;
-  memberIds: Set<string> = new Set<string>;
+
   form = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     description: new FormControl('', [Validators.required, Validators.minLength(10)])
@@ -54,37 +68,25 @@ export class CreateTeamComponent implements OnInit{
     this.form.controls.name.setErrors(null);
     this.form.controls.description.setErrors(null);
     this.member.setErrors(null);
-    this.memberEmails.clear();
+    this.members.splice(1);
   }
   addTeam(){
-    // if(this.form.value.description && this.form.value.name){
-    //   console.log(this.authService.user)
-    //   // const team:Team = {adminId: this.authService.user?.localId || '1', members: [{userId: this.authService.user?.localId || '1', board: {todo: [], process: [], done:[]}}], 
-    //   //   description: this.form.value.description?.split('\n'), 
-    //   //   name: this.form.value.name};
-    //   this.isLoading = true;
-    //   let subscription = this.teamService.addTeam(team).subscribe({
-    //     next: (res) =>{
-    //       console.log(res);
-    //       this.isLoading = false;
-    //       this.resetAllForms();
-    //       this.closeWindow();
-    //     },
-    //     error: (err) =>{
-    //       console.log(err);
-    //       if(this.notification){
-    //         this.notification.setValues('An unknown error has occured', 'error')
-    //         this.notification.show(); 
-    //       }
-    //       this.isLoading = false;
-    //     }
-    //   })
-    // }
-
+    if(this.form.value.description && this.form.value.name && this.authService.user){
+      console.log(this.authService.user)
+      const memberIds = this.members.map( el =>{
+        return el.id;
+      })
+      const team:Team = {adminId: this.authService.user.localId, members: memberIds, 
+        description: this.form.value.description, 
+        name: this.form.value.name, default: false};
+      this.isLoading = true;
+      this.teamService.addTeam(team)
+    }
   }
+
   submitTeam(){
     if(this.form.valid){
-      if(this.memberEmails.size===1){
+      if(this.members.length===1){
         this.openDialog('500ms', '500ms');
       } else{
         this.addTeam();
@@ -99,11 +101,13 @@ export class CreateTeamComponent implements OnInit{
       //this.memberEmails.push(this.member.value);
       this.authService.email(this.member.value).subscribe( data =>{
         if(data.exist && data.email && data.id){
-          if(this.memberEmails.has(data.email)){
+          const res = this.members.filter( el =>{
+            return el.email === data.email
+          })
+          if(res.length > 0){
             this.openNotification('This user is already on the list', 'note');
           } else{
-            this.memberEmails.add(data.email);
-            this.memberIds.add(data.id);
+            this.members.push({email: data.email, id: data.id})
             this.member.reset();
             this.member.setErrors(null);
           }
@@ -111,9 +115,7 @@ export class CreateTeamComponent implements OnInit{
         } else{
           this.openNotification('Sorry, this user is not registered yet.', 'error');
         }
-        console.log(data)
       });
-      console.log(this.memberEmails);
 
     } else{
       this.openNotification('Please, enter the valid email address.', 'error'); 
@@ -165,7 +167,8 @@ export class CreateTeamComponent implements OnInit{
     })
   }
   delete(i:number){
-
+    this.members.splice(i, 1);
+    console.log(this.members);
 
   }
 }

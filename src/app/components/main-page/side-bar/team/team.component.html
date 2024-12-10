@@ -1,0 +1,11 @@
+<div class="wrapper" (click)="setTeam()">
+    <div class="team-name" [ngClass]="{'bold': team?.default}">
+        {{team?.name}}
+    </div>
+    <div class="team-desc">
+        {{team?.description}}
+    </div>
+    <div class="team-img">
+        <img class="img" *ngIf="team?.name!=='Saved'" (click)="delete()" src="bin.png" alt="delete">
+    </div>
+</div>

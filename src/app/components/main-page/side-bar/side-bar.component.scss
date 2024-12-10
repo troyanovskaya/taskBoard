@@ -11,9 +11,12 @@
     z-index:1;
     border-radius: 10px;
     overflow: hidden;
+    overflow-y: auto; /* Enable vertical scroll when content overflows */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    box-sizing: border-box; /* Include padding and border in the element's dimensions */
 }
 .wrapper.open {
-    width: 200px;
+    width: 300px;
 }
 .btn{
     background-color: #3b2559;
@@ -39,19 +42,6 @@
     border-radius: 10px;
     min-height: 20px;
 }
-.team{
-    padding: 5px;
-}
-.team-name{
-    font-size: 1.2em;
-}
-.team-name:hover{
-    cursor:pointer;
-}
-.team-desc{
-    font-style: italic;
-    color: grey;
-}
 .bold{
     font-weight: bold;
 }
@@ -64,7 +54,7 @@
     width:100px;
     border-radius: 10px;
     display:block;
-    margin:auto;
+    margin: 10px auto;
   
   }
   .sbt-btn.active{
@@ -76,4 +66,5 @@
     cursor:pointer;
     transform: scale(1.1)
   }
+
   

@@ -3,18 +3,13 @@
     <button class="btn" *ngIf="!isOpen" (click)="open()" >></button>
     <button class="btn" *ngIf="isOpen" (click)="open()" >{{'<'}}</button>
     <ng-container *ngIf="toOpen">
+        <button *ngIf="toOpen" class="sbt-btn active" (click)="changeVisibility(true)">+ New Team</button>
         <div class="teams">
-            <div class="team" *ngFor="let team of teams">
-                <div class="team-name" [ngClass]="{'bold': team.default}">
-                    {{team.name}}
-                </div>
-                <div class="team-desc">
-                    {{team.description}}
-                </div>
-                
-            </div>
+            <app-team class="team" (closeSideBar)="open()" 
+            *ngFor="let team of teams" [team]="team">
+            </app-team>
         </div>
     </ng-container>
-    <button *ngIf="toOpen" class="sbt-btn active" (click)="changeVisibility(true)">+ New Team</button>
+
 </section>
 <app-create-team (visibility)="changeVisibility($event)" [visible]="createTeamVisible"></app-create-team>

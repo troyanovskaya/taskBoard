@@ -31,10 +31,14 @@ export class BoardComponent implements OnInit{
   @Output() arrayChanged: EventEmitter<boolean> = new EventEmitter<boolean>;
   teamService:TeamService = inject(TeamService);
   disableDrag:boolean = false;
+  selectedTeam: string = '';
   ngOnInit(): void {
     this.teamService.teams.subscribe( el =>{
       this.teams = el;
     } )
+    this.teamService.selectedTeam.subscribe( data =>{
+      this.selectedTeam = data;
+    })
   }
   drop(event: CdkDragDrop<Task[]>) {
 
@@ -51,9 +55,8 @@ export class BoardComponent implements OnInit{
     this.arrayChanged.emit(true);
   }
   createTask(){
-    const currTeam = this.teams.find( el =>  el.default);
-    if(currTeam){
-      this.tasks.push(new Task(this.type, this.tasks.length, currTeam.id))
+    if(this.selectedTeam){
+      this.tasks.push(new Task(this.type, this.tasks.length, this.selectedTeam))
     }
 
   }

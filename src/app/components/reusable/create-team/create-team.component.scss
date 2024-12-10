@@ -2,6 +2,7 @@
     display:flex;
     justify-content: center;
     align-items: center;
+    
 }
 .background{
     background-color: black;
@@ -24,7 +25,10 @@
     left: 50%;         
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    overflow: hidden;
+    max-height: 100vh; /* Restrict the height to the viewport height */
+    overflow-y: auto; /* Enable vertical scroll when content overflows */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    box-sizing: border-box; /* Include padding and border in the element's dimensions */
 }
 .title{
     background-color: #6B4A8C;
@@ -126,17 +130,31 @@
   }
   .member{
     display: flex;
+    flex-direction: row;
     padding:10px;
     border: 1px solid lightgrey;
     border-radius: 10px;
     gap:10px;
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
+    align-items: flex-end;
     width: 200px;
   }
+  .member-item{
+    word-break: break-all;
+    flex: 1;
+  }
+  // .member-img{
+  //   height: auto;
+  // }
   .member-img img{
     width:20px;
     height:20px;
-    float: right;
+    margin-left: auto;
+    transition: all 0.5s ease;
+  }
+  .member-img img:hover{
+    cursor: pointer;
+    transform: scale(1.2);
   }
   @media (width<=320px){
     .window{

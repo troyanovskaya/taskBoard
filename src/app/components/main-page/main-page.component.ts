@@ -25,8 +25,9 @@ export class MainPageComponent implements OnInit {
   ngOnInit() {
     this.authService.getUser();
     this.taskService.tasks.subscribe( data =>{
-      this.setBoards(data)
+      this.setBoards(data);
     })
+
     if(this.authService.user){
       this.taskService.getUserTasks(this.authService.user.localId);
     }
