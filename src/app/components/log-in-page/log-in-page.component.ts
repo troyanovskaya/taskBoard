@@ -87,16 +87,15 @@ export class LogInPageComponent implements OnDestroy, OnInit{
   showNotification(message:string, type:string){
     console.log('message: ', message)
     if(!message){
-      return false;
-    } else{
+      message = 'An unknown error has occured. Please, try again later'
+    } 
       this.notificationMessage = message;
       this.isLoading = false;
       if(this.notification){
         this.notification.setValues(this.notificationMessage, type);
         this.notification.show(); 
-      }
-      return true;
-    }    
+    }
+      
   }
   onSubmit(valid:boolean){
     if(valid && this.form.value.email && this.form.value.password){
@@ -110,6 +109,7 @@ export class LogInPageComponent implements OnDestroy, OnInit{
         error: (err) => {
           this.notificationMessage = '';
           this.isLoading = false;
+          console.log(err)
           this.showNotification(err.error.error, 'error');
         }})
     } else{

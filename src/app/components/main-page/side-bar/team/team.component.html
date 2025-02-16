@@ -1,5 +1,5 @@
 <div class="wrapper" (click)="setTeam()">
-    <div class="team-name" [ngClass]="{'bold': team?.default}">
+    <div class="team-name" [ngClass]="{'bold': team?.id == selectedTeam}">
         {{team?.name}}
     </div>
     <div class="team-desc">

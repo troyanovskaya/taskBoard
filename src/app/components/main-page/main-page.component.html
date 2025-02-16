@@ -1,5 +1,6 @@
 <div class="wrapper">
     <app-side-bar></app-side-bar>
+    <app-side-bar-r></app-side-bar-r>
     <div cdkDropListGroup class="board-container" >
         <ng-container *ngFor="let board of boards">
             <app-board (arrayChanged)="arrayChanged()"  [id]="board.id" 

@@ -12,6 +12,7 @@ export class TaskService {
   dataService:DataService = inject(DataService);
   http:HttpClient = inject(HttpClient);
   tasks: Subject<Task[]> = new Subject<Task[]>();
+  mates :{email:string, tasks: Task[]}[] = [];
   createTask(task:Task){
       return this.http.post<{id: string}>(`${this.dataService.url}/tasks`, task)
     
@@ -21,6 +22,15 @@ export class TaskService {
     subscribe( data =>{
       this.tasks.next(data);
     })
+  }
+  getTeamMatesTask(userId:string){
+    this.http.post<{email:string, tasks: Task[]}[]>(`${this.dataService.url}/user/id`, {userId}).
+    subscribe( data =>{
+      this.mates.push(...data);
+    })
+  }
+  clearMates(){
+    this.mates = [];
   }
   updateTask(id:string, task:any){
     return this.http.patch<{message: string}>(`${this.dataService.url}/tasks/${id}`, task)

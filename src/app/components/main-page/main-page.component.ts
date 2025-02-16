@@ -10,10 +10,12 @@ import { Board } from '../../models/Board';
 import { Task } from '../../models/Task';
 import { TaskService } from '../../services/task.service';
 import {SideBarComponent} from './side-bar/side-bar.component'
+import { SideBarRComponent } from './side-bar-r/side-bar-r.component';
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [BoardComponent, CommonModule, DragDropModule, SideBarComponent],
+  imports: [BoardComponent, CommonModule, DragDropModule, 
+    SideBarComponent, SideBarRComponent],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })

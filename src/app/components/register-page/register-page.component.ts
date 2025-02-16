@@ -91,16 +91,14 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   }
   showNotification(message:string, type:string){
     if(!message){
-      return false;
-    } else{
+      message = 'An unknown error has occured. Please, try again later'
+    } 
       this.notificationMessage = message;
       this.isLoading = false;
       if(this.notification){
         this.notification.setValues(this.notificationMessage, type);
         this.notification.show(); 
-      }
-      return true;
-    }    
+    }
   }
   onSubmit(valid:boolean){
     if(valid && this.form.value.email && this.form.value.password){

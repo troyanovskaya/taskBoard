@@ -1,8 +1,10 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Team } from '../../../../models/Team';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../services/auth.service';
 import { TeamService } from '../../../../services/team.service';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { TaskService } from '../../../../services/task.service';
 
 @Component({
   selector: 'app-team',
@@ -11,11 +13,24 @@ import { TeamService } from '../../../../services/team.service';
   templateUrl: './team.component.html',
   styleUrl: './team.component.scss'
 })
-export class TeamComponent {
+export class TeamComponent implements OnInit, OnDestroy{
+
 @Input() team?: Team;
 @Output() closeSideBar:EventEmitter<boolean> = new EventEmitter<boolean>
 teamService: TeamService = inject(TeamService);
+taskService: TaskService = inject(TaskService);
 authService: AuthService = inject(AuthService);
+selectedTeam: string = '';
+subscription?: Subscription;
+ngOnInit(){
+  this.subscription = this.teamService.selectedTeam.subscribe( el =>{
+    this.selectedTeam = el;
+  });
+
+}
+ngOnDestroy(){
+  this.subscription?.unsubscribe();
+}
 delete(){
   if(this.team && this.authService.user){
     this.teamService.removeTeam(this.team.id, this.authService.user.localId);
@@ -24,7 +39,12 @@ delete(){
 setTeam(){
   if(this.team){
     this.teamService.setTeam(this.team.id);
+    this.taskService.clearMates();
+    this.team.members.forEach( el =>{
+      this.taskService.getTeamMatesTask(el);
+    });
     this.closeSideBar.emit(true);
   }
+
 }
 }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Team } from '../models/Team';
-import { map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 import { DataService } from './data.service';
 import { AuthService } from './auth.service';
 
@@ -14,7 +14,7 @@ export class TeamService {
   dataService: DataService = inject(DataService);
   teams: Subject<Team[]> = new Subject<Team[]>();
   errorAdding: Subject<boolean> = new Subject<boolean> ;
-  selectedTeam: Subject<string> = new Subject<string>;
+  selectedTeam: BehaviorSubject<string> = new BehaviorSubject('0');
   setTeam(teamId:string | undefined){
     if(teamId){
       this.selectedTeam.next(teamId);

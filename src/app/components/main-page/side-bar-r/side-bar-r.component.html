@@ -1,0 +1,13 @@
+<section class="wrapper" [ngClass]="{'open': isOpen}">
+    <div class="title"> <span *ngIf="toOpen">Team mates</span></div>
+    <button class="btn" *ngIf="!isOpen" (click)="open()" >{{'<'}}</button>
+    <button class="btn" *ngIf="isOpen" (click)="open()" >{{'>'}}</button>
+    
+    
+    <ng-container *ngFor="let mate of taskService.mates">
+       <div *ngIf="toOpen" class="item"> {{mate.email}}</div>
+    </ng-container>
+
+    <p  *ngIf="toOpen && taskService.mates.length===0">You are the only team member... Add some friends!</p>
+
+</section>
