@@ -5,6 +5,7 @@ import { Team } from '../models/Team';
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 import { DataService } from './data.service';
 import { AuthService } from './auth.service';
+import { TaskService } from './task.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,11 @@ import { AuthService } from './auth.service';
 export class TeamService {
   http:HttpClient = inject(HttpClient);
   dataService: DataService = inject(DataService);
+  taskService: TaskService = inject(TaskService);
   teams: Subject<Team[]> = new Subject<Team[]>();
   errorAdding: Subject<boolean> = new Subject<boolean> ;
   selectedTeam: BehaviorSubject<string> = new BehaviorSubject('0');
   setTeam(teamId:string | undefined){
-    console.log('set team, teamId: ', teamId)
     if(teamId){
       this.selectedTeam.next(teamId);
     }
@@ -38,6 +39,7 @@ export class TeamService {
       this.teams.next(data);
       if(data[0].id){
         this.setTeam(data[0].id);
+        this.taskService.clearMates();
       }
     }, 
     error: (err) =>{
@@ -55,7 +57,7 @@ export class TeamService {
     
   }
   updateTeam(team:Team){
-    return this.http.patch<any>(`${this.dataService.url}/teams/${team.id}`, team) 
+    return this.http.patch<any>(`${this.dataService.url}/teams/${team.id}`, team)
   }
   getTeam(teamId:string){
     return this.http.get<Team>(`${this.dataService.url}/teams/${teamId}`); 

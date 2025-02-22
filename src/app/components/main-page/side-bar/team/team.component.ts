@@ -34,6 +34,17 @@ ngOnDestroy(){
 delete(){
   if(this.team && this.authService.user){
     this.teamService.removeTeam(this.team.id, this.authService.user.localId);
+    this.team = undefined;
+  }
+}
+exit(){
+  if(this.team && this.authService.user){
+    this.team.members = this.team.members.filter( el=>{
+      return el!= this.authService.user?.localId
+    })
+    this.teamService.updateTeam(this.team).subscribe();
+    this.teamService.getTeams(this.authService.user.localId);
+    this.team = undefined;
   }
 }
 setTeam(){
@@ -41,7 +52,6 @@ setTeam(){
     this.teamService.setTeam(this.team.id);
     this.taskService.clearMates();
     let id = this.authService.user?.localId;
-    console.log(this.authService.user);
     this.team.members.forEach( el =>{
       if(el!==id){
         this.taskService.getTeamMatesTask(el);

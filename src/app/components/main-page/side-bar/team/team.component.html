@@ -6,6 +6,10 @@
         {{team?.description}}
     </div>
     <div class="team-img">
-        <img class="img" *ngIf="team?.name!=='Saved'" (click)="delete()" src="bin.png" alt="delete">
+        <img class="img" *ngIf="team?.name!=='Saved' && team?.adminId === authService.user?.localId" (click)="delete()" src="bin.png" alt="delete">
+        <button class="sbt-btn active" (click)="exit()"
+        *ngIf="team?.adminId!== authService.user?.localId">
+            Exit
+        </button>
     </div>
 </div>

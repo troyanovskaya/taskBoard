@@ -1,9 +1,9 @@
 <div class="wrapper">
-    <div class="hello">
-        <p>Hello, {{authService.user?.email}}!</p>
-        <p *ngIf="dataService.selectedUser">Board belongs to: {{dataService.selectedUser?.email}}</p>
+    <div *ngIf="authService.user" class="hello">
+        <p>Hello, {{authService.user.email}}!</p>
+        <p *ngIf="dataService.selectedUser">Board belongs to: {{dataService.selectedUser.email}}</p>
     </div>
-    <button *ngIf="dataService.selectedUser" class="sbt-btn active" (click)="returnToOwnBoard()">My tasks</button>
+    <button *ngIf="dataService.selectedUser && authService.user" class="sbt-btn active" (click)="returnToOwnBoard()">My tasks</button>
     <button *ngIf="authService.user" class="sbt-btn active" (click)="logout()">Logout</button>
     
 </div>

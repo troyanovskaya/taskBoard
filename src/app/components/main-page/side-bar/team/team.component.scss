@@ -37,3 +37,24 @@
 .bold{
     font-weight: bolder;
 }
+.sbt-btn{
+    background-color: #bf5ea5;
+    color:white;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    border:0px;
+    border-radius: 10px;
+    padding: 5px;
+  }
+  .sbt-btn.active{
+    opacity: 0.8;
+  
+  }
+  .sbt-btn.active:hover{
+    opacity: 1;
+    cursor:pointer;
+    transform: scale(1.1)
+  }
+  
+  .sbt-btn.disabled{
+    opacity:0.6
+  }

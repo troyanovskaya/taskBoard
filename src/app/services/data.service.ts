@@ -6,8 +6,8 @@ import { Task } from '../models/Task';
   providedIn: 'root'
 })
 export class DataService {
-  url:string = 'http://localhost:3000';
-  //url:string = 'https://us-central1-taskboard-eb7da.cloudfunctions.net/api';
+  //url:string = 'http://localhost:3000';
+  url:string = 'https://us-central1-taskboard-eb7da.cloudfunctions.net/api';
   mode: BehaviorSubject<'user' | 'mate' | 'admin'> = new BehaviorSubject<'user' | 'mate' | 'admin'>('user');
   selectedUser?: {id:string, tasks:Task[], email:string};
   changeRole(role: 'user' |  'mate' | 'admin'){

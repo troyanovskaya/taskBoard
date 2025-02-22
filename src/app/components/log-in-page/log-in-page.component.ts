@@ -28,8 +28,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 })
 export class LogInPageComponent implements OnDestroy, OnInit{
   form = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)])
+    email: new FormControl('q@gmail.com', [Validators.required, Validators.email]),
+    password: new FormControl('11111111', [Validators.required, Validators.minLength(8)])
   })
   hide = signal(true);
   errorEmailMessage = signal('');
