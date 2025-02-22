@@ -19,6 +19,7 @@ export class AuthService {
       const user = localStorage.getItem('user');
       if(user){
         this.user = JSON.parse(user);
+        this.dataService.changeRole('user');
       }
     }
   }
@@ -27,7 +28,7 @@ export class AuthService {
     const expires = new Date(expiresTs);
     const user = new User(res.displayName, res.email, res.localId, res.idToken, res.refreshToken, expires);
     this.user = user;
-    console.log(user);
+    this.dataService.changeRole('user');
     localStorage.setItem('user', JSON.stringify(user));
     this.user = user;
   }

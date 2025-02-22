@@ -6,6 +6,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { TaskService } from '../../../../services/task.service';
 import { AuthService } from '../../../../services/auth.service';
 import { NotificationComponent } from '../../../reusable/notification/notification.component';
+import { DataService } from '../../../../services/data.service';
 @Component({
   selector: 'app-task',
   standalone: true,
@@ -23,6 +24,8 @@ export class TaskComponent implements OnInit{
   onEditMode:boolean = false;
   taskService: TaskService = inject(TaskService);
   authService:AuthService = inject(AuthService);
+  dataService:DataService = inject(DataService);
+  mode$ =  this.dataService.mode;
   ngOnInit(){
     if (!this.task?.task) {
       this.onEditMode = true; // Set edit mode without triggering the method
@@ -67,12 +70,20 @@ export class TaskComponent implements OnInit{
               this.task.task = this.message;
             }
         });
-        } else{
-          this.task.setValues(
-            this.authService.user?.localId,
-            this.authService.user?.localId,
-            this.message
-          );  
+        } else {
+          if (this.dataService.selectedUser){
+            this.task.setValues(
+              this.authService.user?.localId,
+              this.dataService.selectedUser.id,
+              this.message
+            ); 
+          }else{          
+            this.task.setValues(
+              this.authService.user?.localId,
+              this.authService.user?.localId,
+              this.message
+            );  
+          }
           this.taskService.createTask(this.task).subscribe((el) => {
             setTimeout(() => {
               if (this.task) {

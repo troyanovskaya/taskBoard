@@ -6,11 +6,17 @@
     overflow: hidden;
 }
 .title{
-    background-color: #6B4A8C;
+
     color:white;
     font-size: 1.2em;
     text-align: center;
     padding: 5px;
+}
+.user-title{
+  background-color: #6B4A8C;
+}
+.mate-title{
+  background-color: lightgrey;
 }
 
 .example-container {

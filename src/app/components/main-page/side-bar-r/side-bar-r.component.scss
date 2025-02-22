@@ -83,3 +83,19 @@ p{
     padding: 10px;
     font-style: italic;
 }
+.btn{
+    background-color: #3b2559;
+    border: 0px;
+    color:white;
+    position:absolute;
+    top:0px;
+    right:0px;
+    padding:5px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    cursor:pointer;
+    transition: all 0.5s ease;
+}
+.btn:hover{
+    transform: scale(1.1)
+}

@@ -40,8 +40,12 @@ setTeam(){
   if(this.team){
     this.teamService.setTeam(this.team.id);
     this.taskService.clearMates();
+    let id = this.authService.user?.localId;
+    console.log(this.authService.user);
     this.team.members.forEach( el =>{
-      this.taskService.getTeamMatesTask(el);
+      if(el!==id){
+        this.taskService.getTeamMatesTask(el);
+      }
     });
     this.closeSideBar.emit(true);
   }

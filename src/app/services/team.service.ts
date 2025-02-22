@@ -16,6 +16,7 @@ export class TeamService {
   errorAdding: Subject<boolean> = new Subject<boolean> ;
   selectedTeam: BehaviorSubject<string> = new BehaviorSubject('0');
   setTeam(teamId:string | undefined){
+    console.log('set team, teamId: ', teamId)
     if(teamId){
       this.selectedTeam.next(teamId);
     }
@@ -52,6 +53,12 @@ export class TeamService {
       });
     }
     
+  }
+  updateTeam(team:Team){
+    return this.http.patch<any>(`${this.dataService.url}/teams/${team.id}`, team) 
+  }
+  getTeam(teamId:string){
+    return this.http.get<Team>(`${this.dataService.url}/teams/${teamId}`); 
   }
   // constructor(private db: AngularFireDatabase){}
 }

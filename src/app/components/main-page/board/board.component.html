@@ -1,5 +1,5 @@
 <div class="wrapper" [id]="id" >
-    <div class="title">
+    <div class="title" [ngClass]="{'user-title': (mode$ | async) === 'user', 'mate-title': (mode$ | async) !== 'user'}">
         <div>{{title}}</div>
     </div>
     <div class="drag-area" >
@@ -12,10 +12,10 @@
           <!-- <div class="example-box" cdkDrag>{{task}}</div> -->
            <app-task *ngIf="task.teamId == selectedTeam" 
            (dragDisabled)="dragDisabled($event)" 
-           class="example-box" cdkDrag [cdkDragDisabled]="disableDrag" 
+           class="example-box" cdkDrag [cdkDragDisabled]=" (mode$ | async) != 'user'" 
            [task]="task" (taskDeleted)="onTaskDeleted($event)"></app-task>
         }
       </div>
     </div>
-    <button [disabled] = "disableDrag" (click)="createTask()" class="sbt-btn active">+</button>
+    <button *ngIf="(mode$ | async) !== 'mate'" [disabled] = "disableDrag" (click)="createTask()" class="sbt-btn active">+</button>
 </div>

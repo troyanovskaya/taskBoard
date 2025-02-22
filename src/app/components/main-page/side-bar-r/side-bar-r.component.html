@@ -1,13 +1,16 @@
 <section class="wrapper" [ngClass]="{'open': isOpen}">
+
     <div class="title"> <span *ngIf="toOpen">Team mates</span></div>
     <button class="btn" *ngIf="!isOpen" (click)="open()" >{{'<'}}</button>
     <button class="btn" *ngIf="isOpen" (click)="open()" >{{'>'}}</button>
     
     
     <ng-container *ngFor="let mate of taskService.mates">
-       <div *ngIf="toOpen" class="item"> {{mate.email}}</div>
+       <div *ngIf="toOpen" class="item" (click)="setBoards(mate)"> {{mate.email}}</div>
     </ng-container>
-
+    <button *ngIf="toOpen && taskService.mates.length!==0" 
+        class="sbt-btn active" (click)="visibility.emit(true)" >+ Member
+    </button>
     <p  *ngIf="toOpen && taskService.mates.length===0">You are the only team member... Add some friends!</p>
 
 </section>

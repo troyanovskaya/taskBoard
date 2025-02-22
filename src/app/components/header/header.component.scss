@@ -5,18 +5,20 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content:space-between;
+  align-items: center;
+  padding:10px;
+  box-sizing: border-box;
 }
 .sbt-btn{
   background-color: #bf5ea5;
   color:white;
   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-  padding:5px;
+
   border:0px;
   width:100px;
+  height:30px;
   border-radius: 10px;
-  display:block;
-  margin:auto;
 
 }
 .sbt-btn.active{
@@ -31,4 +33,11 @@
 
 .sbt-btn.disabled{
   opacity:0.6
+}
+.hello{
+  color:white;
+  padding:5px;
+  p{
+    margin:0px;
+  }
 }

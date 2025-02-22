@@ -11,11 +11,12 @@ import { Task } from '../../models/Task';
 import { TaskService } from '../../services/task.service';
 import {SideBarComponent} from './side-bar/side-bar.component'
 import { SideBarRComponent } from './side-bar-r/side-bar-r.component';
+import { AddMemberComponent } from "../reusable/add-member/add-member.component";
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [BoardComponent, CommonModule, DragDropModule, 
-    SideBarComponent, SideBarRComponent],
+  imports: [BoardComponent, CommonModule, DragDropModule,
+    SideBarComponent, SideBarRComponent, AddMemberComponent],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })
@@ -23,6 +24,7 @@ export class MainPageComponent implements OnInit {
   teamService: TeamService = inject(TeamService);
   taskService:TaskService = inject(TaskService);
   authService:AuthService = inject(AuthService);
+  visible:boolean = false;
   boards: Board[] = [];
   ngOnInit() {
     this.authService.getUser();
@@ -33,6 +35,9 @@ export class MainPageComponent implements OnInit {
     if(this.authService.user){
       this.taskService.getUserTasks(this.authService.user.localId);
     }
+  }
+  openAddMember(state:boolean){
+    this.visible = state;
   }
   setBoards(data: Task[]){
     let Do:Task[] = [];
@@ -60,6 +65,7 @@ export class MainPageComponent implements OnInit {
     Done = Done.sort( (a, b) =>{
       return a.num - b.num;
     })
+    this.boards = [];
     this.boards.push(
       {title: 'To do', ref:'do', id: 'list-1', tasks: Do, connectedTo: ['list-2, list-3']},
       {title: 'In process', ref:'progress', id: 'list-2', tasks: Progress, connectedTo: ['list-1, list-3']},

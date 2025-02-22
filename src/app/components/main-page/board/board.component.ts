@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import {
@@ -14,6 +14,7 @@ import { TaskComponent } from './task/task.component';
 import { List, Task } from '../../../models/Task';
 import { Team } from '../../../models/Team';
 import { TeamService } from '../../../services/team.service';
+import { DataService } from '../../../services/data.service';
 @Component({
   selector: 'app-board',
   standalone: true,
@@ -29,16 +30,37 @@ export class BoardComponent implements OnInit{
   @Input () connectedTo: string[] = [];
   @Input() id?: string;
   @Output() arrayChanged: EventEmitter<boolean> = new EventEmitter<boolean>;
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   teamService:TeamService = inject(TeamService);
+  dataService: DataService = inject(DataService);
   disableDrag:boolean = false;
   selectedTeam: string = '';
+  mode$ =  this.dataService.mode;
+  mode: 'user' | 'mate' | 'admin' = 'user';
   ngOnInit(): void {
+    // setInterval( () => {
+    //   console.log(this.mode$)
+    // }, 1000)
+    //this.disableDrag = true;
     this.teamService.teams.subscribe( el =>{
       this.teams = el;
     } )
     this.teamService.selectedTeam.subscribe( data =>{
       this.selectedTeam = data;
     })
+
+    // this.dataService.mode.subscribe( data =>{
+    //   this.mode = data;
+    //   this.disableDrag = true;
+    //   this.cdr.detectChanges();
+    //   this.dragDisabled(true);
+    //   // if(data === 'user'){
+    //   //   this.disableDrag = false;
+    //   // } else{
+    //   //   this.disableDrag = true;
+    //   // }
+    //   console.log(this.disableDrag)
+    // })
   }
   drop(event: CdkDragDrop<Task[]>) {
 
@@ -69,7 +91,9 @@ export class BoardComponent implements OnInit{
   dragDisabled(flag: boolean){
     setTimeout(() => {
       this.disableDrag = flag;
+      this.cdr.detectChanges();
     });
+
 
   }
 }

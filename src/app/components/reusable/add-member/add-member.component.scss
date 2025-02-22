@@ -1,0 +1,94 @@
+.wrapper{    
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.background{
+    background-color: black;
+    opacity: 0.4;
+    position: fixed;
+    top:0px;
+    left:0px;
+    width: 100%;
+    height: 100vh;
+    z-index:2;
+}
+.window{
+    width:500px;
+    min-height:200px;
+    background-color: white;
+    opacity:1;
+    position: fixed;
+    z-index:3;
+    top: 50%;           
+    left: 50%;         
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    max-height: 100vh; /* Restrict the height to the viewport height */
+    overflow-y: auto; /* Enable vertical scroll when content overflows */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    box-sizing: border-box; /* Include padding and border in the element's dimensions */
+}
+.title{
+    background-color: #6B4A8C;
+    color:white;
+    font-size: 1.2em;
+    text-align: center;
+    padding: 10px;
+    position:relative;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin:20px;
+
+}
+.sbt-btn{
+    background-color: #bf5ea5;
+    color:white;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    padding:5px;
+    border:0px;
+    border-radius: 10px;
+    display:block;
+    margin:auto;
+  
+  }
+  .sbt-btn.active{
+    opacity: 0.8;
+  
+  }
+  .sbt-btn.active:hover{
+    opacity: 1;
+    cursor:pointer;
+    transform: scale(1.1)
+  }
+  .add{
+    border-radius: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+  }
+  app-dialog{
+    z-index:4;
+  }
+  .cross{
+    position:absolute;
+    right:10px;
+    top:5px;
+    padding:5px;
+    transition: all .5s ease-in-out;
+  }
+  .cross:hover{
+    background-color:#bf5ea5;
+    border-radius: 5px;
+    cursor:pointer;
+  }
+  .loader-container{
+    padding:20px;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+  }

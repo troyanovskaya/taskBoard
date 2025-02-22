@@ -12,10 +12,13 @@ export class TaskService {
   dataService:DataService = inject(DataService);
   http:HttpClient = inject(HttpClient);
   tasks: Subject<Task[]> = new Subject<Task[]>();
-  mates :{email:string, tasks: Task[]}[] = [];
+  mates :{email:string, tasks: Task[], id:string}[] = [];
   createTask(task:Task){
       return this.http.post<{id: string}>(`${this.dataService.url}/tasks`, task)
     
+  }
+  setMateTasks(tasks:Task[]){
+    this.tasks.next(tasks);
   }
   getUserTasks(id:string){
     this.http.get<Task[]>(`${this.dataService.url}/tasks/user/${id}`).
@@ -24,8 +27,9 @@ export class TaskService {
     })
   }
   getTeamMatesTask(userId:string){
-    this.http.post<{email:string, tasks: Task[]}[]>(`${this.dataService.url}/user/id`, {userId}).
+    this.http.post<{email:string, tasks: Task[], id:string}[]>(`${this.dataService.url}/user/id`, {userId}).
     subscribe( data =>{
+      console.log('TeamMatesTask: ', data)
       this.mates.push(...data);
     })
   }

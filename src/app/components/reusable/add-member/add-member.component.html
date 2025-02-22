@@ -1,0 +1,28 @@
+<div class="wrapper" *ngIf="visible">
+    <!-- <app-dialog [title]="dialogTitle" [message]="dialogMessage"></app-dialog> -->
+    <app-notification></app-notification>
+    
+    <div class="window">
+        <div class="title">
+            <div>Add a new team member</div>
+            <div class="cross" (click)="closeWindow()">X</div>
+        </div>
+        <div *ngIf="isLoading" class="loader-container">
+            <app-loader></app-loader>
+        </div>
+        <form *ngIf="!isLoading" class="forms">
+                <mat-form-field>
+                    <mat-label>New member</mat-label>
+                    <input
+                        matInput
+                        placeholder="pat@example.com"
+                        [formControl]="member"
+                        required
+                    />
+                </mat-form-field>
+                <button (click)="addMember()" type="button" class="sbt-btn active add">+</button>
+              
+        </form>
+    </div>
+    <div class="background" (click)="closeWindow()"></div>
+</div>
